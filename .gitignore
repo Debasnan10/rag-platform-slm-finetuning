@@ -1,0 +1,40 @@
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.eggs/
+.venv/
+venv/
+env/
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
+.coverage
+htmlcov/
+
+# --- Env / secrets ---
+.env
+*.local
+
+# --- Data / model artifacts (large, regenerable) ---
+data/faiss_index/
+data/adapters/
+data/eval/reports/
+data/raw/
+*.gguf
+*.bin
+*.safetensors
+
+# --- Jupyter ---
+.ipynb_checkpoints/
+
+# --- Docker ---
+docker/grafana/data/
+
+# --- OS ---
+.DS_Store
+Thumbs.db
+
+# --- IDE ---
+.vscode/
+.idea/

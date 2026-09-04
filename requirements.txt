@@ -1,0 +1,55 @@
+########################################################################
+# Production-Grade RAG Platform with On-Device SLM Fine-Tuning
+# requirements.txt
+#
+# Grouped by the phase that first needs them. Everything here is a
+# free / open-source library - no paid API SDKs.
+########################################################################
+
+# ---- Phase 1: Foundation -------------------------------------------
+fastapi==0.115.6
+uvicorn[standard]==0.34.0
+pydantic==2.10.4
+pydantic-settings==2.7.1
+python-dotenv==1.0.1
+langchain==0.3.14
+langchain-community==0.3.14
+langchain-core==0.3.29
+langchain-ollama==0.2.2
+
+# ---- Phase 2: Document ingestion ------------------------------------
+pypdf==5.1.0
+docx2txt==0.8
+unstructured==0.16.11
+markdown==3.7
+
+# ---- Phase 3: FAISS vector store -------------------------------------
+faiss-cpu==1.9.0.post1
+sentence-transformers==3.3.1
+
+# ---- Phase 4: Hybrid search + reranking ------------------------------
+rank-bm25==0.2.2
+
+# ---- Phase 5-7: Fine-tuning / quantization ---------------------------
+transformers==4.47.1
+peft==0.14.0
+bitsandbytes==0.45.0
+trl==0.13.0
+datasets==3.2.0
+accelerate==1.2.1
+
+# ---- Phase 8: Evaluation ----------------------------------------------
+sacrebleu==2.5.1
+rouge-score==0.1.2
+evaluate==0.4.3
+
+# ---- Phase 9: API / Observability --------------------------------------
+prometheus-client==0.21.1
+prometheus-fastapi-instrumentator==7.0.0
+
+# ---- Testing & tooling --------------------------------------------------
+pytest==8.3.4
+pytest-asyncio==0.25.1
+httpx==0.28.1
+ruff==0.8.6
+mypy==1.14.1

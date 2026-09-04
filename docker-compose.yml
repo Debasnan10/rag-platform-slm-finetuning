@@ -1,0 +1,33 @@
+# Phase 1 skeleton: just the API and its LLM backend (Ollama).
+# Prometheus + Grafana services are added in Phase 9, once the API
+# actually exposes a /metrics endpoint for them to scrape.
+
+services:
+  app:
+    build: .
+    container_name: rag-platform-app
+    ports:
+      - "8000:8000"
+    env_file:
+      - .env
+    environment:
+      OLLAMA_BASE_URL: http://ollama:11434
+    volumes:
+      - ./app:/app/app
+      - faiss_index:/app/data/faiss_index
+    depends_on:
+      - ollama
+    restart: unless-stopped
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: rag-platform-ollama
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama_models:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  faiss_index:
+  ollama_models:
