@@ -15,6 +15,7 @@ from pathlib import Path
 from langchain_community.vectorstores import FAISS
 from langchain_core.documents import Document
 from langchain_core.embeddings import Embeddings
+from langchain_core.retrievers import BaseRetriever
 
 from app.core.config import Settings, get_settings
 from app.core.exceptions import NotFoundError, VectorStoreError
@@ -120,6 +121,14 @@ class VectorStore:
             raise VectorStoreError("No index built or loaded - call build() or load() first.")
 
         return self._index.similarity_search_with_score(query, k=k or self._settings.faiss_top_k)
+
+    def as_retriever(self, k: int | None = None) -> BaseRetriever:
+        """Expose this index as a LangChain `BaseRetriever` (for use in `EnsembleRetriever`, etc.)."""
+
+        if self._index is None:
+            raise VectorStoreError("No index built or loaded - call build() or load() first.")
+
+        return self._index.as_retriever(search_kwargs={"k": k or self._settings.faiss_top_k})
 
 
 @lru_cache
