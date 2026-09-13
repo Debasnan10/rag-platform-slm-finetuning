@@ -26,6 +26,7 @@ beautifulsoup4==4.15.0
 # ---- Phase 3: FAISS vector store -------------------------------------
 faiss-cpu==1.9.0.post1
 sentence-transformers==3.3.1
+langchain-huggingface==0.1.2
 
 # ---- Phase 4: Hybrid search + reranking ------------------------------
 rank-bm25==0.2.2
