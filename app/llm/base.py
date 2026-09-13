@@ -1,15 +1,13 @@
 """LangChain LLM abstraction.
 
 The rest of the app (RAG chain, evaluation, fine-tuning comparisons)
-should depend on this thin `Protocol`, not on a concrete LangChain class
-directly. That's the same reason you'd code against `ILlmClient` in C#
-instead of `new OllamaHttpClient()` scattered through the codebase: it
-keeps call sites swappable and easy to fake in tests.
+depends on this thin `Protocol`, not on a concrete LangChain class
+directly, keeping call sites swappable and easy to fake in tests.
 
 Today there is exactly one implementation (`app/llm/ollama.py`, backed by
-Ollama). If a future phase adds another local runtime (e.g. llama.cpp
-directly, or a different Ollama model class), it only needs to satisfy
-this Protocol and get wired up in `get_llm_provider()`.
+Ollama). Adding another local runtime (e.g. llama.cpp directly, or a
+different model class) only requires satisfying this Protocol and wiring
+it up at the provider's construction site.
 """
 
 from __future__ import annotations

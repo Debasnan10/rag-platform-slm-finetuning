@@ -16,12 +16,12 @@ langchain==0.3.14
 langchain-community==0.3.14
 langchain-core==0.3.29
 langchain-ollama==0.2.2
+langchain-text-splitters==0.3.5
 
 # ---- Phase 2: Document ingestion ------------------------------------
 pypdf==5.1.0
 docx2txt==0.8
-unstructured==0.16.11
-markdown==3.7
+beautifulsoup4==4.15.0
 
 # ---- Phase 3: FAISS vector store -------------------------------------
 faiss-cpu==1.9.0.post1

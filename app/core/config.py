@@ -1,11 +1,10 @@
 """Centralized, typed application configuration.
 
-Every setting the app needs lives here, in one place, with a type and a
-default. Values are populated from (in priority order): real environment
-variables > a local `.env` file > the defaults below. This is the same
-idea as `IConfiguration` / strongly-typed `IOptions<T>` in ASP.NET Core -
-one object graph you inject wherever you need config, instead of calling
-`os.environ["SOME_VAR"]` scattered across the codebase.
+Every setting the app needs is declared here, with a type and a default.
+Values are resolved in priority order: real environment variables, then a
+local `.env` file, then the defaults below. Application code should read
+configuration through `get_settings()` rather than `os.environ` directly,
+so every configurable value has one typed, validated source of truth.
 
 Usage:
     from app.core.config import get_settings
@@ -101,13 +100,12 @@ class Settings(BaseSettings):
 
 @lru_cache
 def get_settings() -> Settings:
-    """Return the process-wide Settings singleton.
+    """Return the process-wide `Settings` instance.
 
-    `lru_cache` means the *first* call builds the object (reading env vars
-    and `.env`); every later call returns the same cached instance rather
-    than re-parsing. This is the equivalent of registering `IOptions<T>`
-    as a singleton in the .NET DI container - construct once, reuse
-    everywhere, including in FastAPI route handlers via `Depends(get_settings)`.
+    Environment/`.env` resolution happens once, on first call, and the
+    result is cached for the lifetime of the process. Call sites should
+    depend on this function rather than instantiating `Settings()`
+    directly - including as a FastAPI dependency via `Depends(get_settings)`.
     """
 
     return Settings()

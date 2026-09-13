@@ -7,11 +7,9 @@ standard LangChain `BaseLanguageModel`, so the rest of our code (prompt
 templates, RAG chains) never has to know it's talking to Ollama
 specifically.
 
-Note: the project brief mentions `langchain_community.llms.Ollama`, but
-that class is deprecated upstream in favor of the dedicated
-`langchain-ollama` package (`OllamaLLM`) we use here - same idea, actively
-maintained package instead of the legacy shim. Worth knowing both names
-exist if you see the older one in tutorials/docs.
+Note: `langchain_community.llms.Ollama` is deprecated upstream in favor of
+the dedicated `langchain-ollama` package (`OllamaLLM`) used here - same
+integration, actively maintained package instead of the legacy shim.
 """
 
 from __future__ import annotations
@@ -27,15 +25,9 @@ from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
-# `OllamaProvider` below implements `app.llm.base.LLMProvider` structurally
-# (Python's Protocol is duck-typed - no explicit `class OllamaProvider(LLMProvider)`
-# needed, similar to how a C# type satisfies an interface implicitly in
-# structurally-typed languages, though C# itself requires explicit
-# `: IInterface`). See `app/llm/base.py` for the contract.
-
 
 class OllamaProvider:
-    """Concrete `LLMProvider` backed by a local Ollama server."""
+    """Concrete `LLMProvider` (see `app/llm/base.py`) backed by a local Ollama server."""
 
     def __init__(self, settings: Settings) -> None:
         self._settings = settings

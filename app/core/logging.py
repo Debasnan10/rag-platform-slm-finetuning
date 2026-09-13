@@ -1,16 +1,14 @@
 """Structured logging with request-scoped correlation IDs.
 
-Every log line is emitted as one JSON object (when `log_json=True`),
-carrying a `correlation_id` that is the same for every log line produced
-while handling a single HTTP request - so grepping logs for one ID gives
-you that request's whole story, even across multiple function calls.
+Every log record is emitted as one JSON object (when `log_json=True`),
+carrying a `correlation_id` that is constant for the lifetime of a single
+request - so filtering logs by that ID reconstructs a request's full
+execution trace across modules.
 
-The correlation ID is stored in a `contextvars.ContextVar`, not a global
-variable or a parameter threaded through every function. A ContextVar is
-Python's answer to "a value that's global within one async task/request
-but different across concurrent ones" - it is the rough equivalent of
-`AsyncLocal<T>` in .NET, which is exactly what ASP.NET Core uses under the
-hood for things like `HttpContext.TraceIdentifier`.
+The correlation ID is held in a `contextvars.ContextVar` rather than a
+global or a parameter threaded through every call. `ContextVar` values are
+isolated per asyncio task, so concurrent requests handled on the same
+event loop never observe each other's value.
 """
 
 from __future__ import annotations
@@ -84,11 +82,11 @@ class _PlainFormatter(logging.Formatter):
 
 
 def setup_logging(*, level: str = "INFO", json_output: bool = True) -> None:
-    """Configure the root logger once, at application startup.
+    """Configure the root logger. Call once, at process startup.
 
-    Call this exactly once (e.g. from the FastAPI app factory or a
-    pytest fixture) - equivalent to configuring `ILoggingBuilder` in a
-    .NET `Program.cs`.
+    Replaces any handlers already attached to the root logger, so calling
+    this more than once (e.g. across repeated test-suite app instances)
+    does not produce duplicated log output.
     """
 
     root = logging.getLogger()
@@ -106,7 +104,7 @@ def setup_logging(*, level: str = "INFO", json_output: bool = True) -> None:
 
 
 def get_logger(name: str) -> logging.Logger:
-    """Convenience wrapper, mirrors `logging.getLogger(__name__)`."""
+    """Return a module-scoped logger, e.g. `get_logger(__name__)`."""
 
     return logging.getLogger(name)
 

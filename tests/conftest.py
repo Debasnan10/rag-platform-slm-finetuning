@@ -13,8 +13,8 @@ def client() -> TestClient:
     """A TestClient wrapping a freshly-built FastAPI app.
 
     `TestClient` drives the app in-process (no real network socket),
-    the same way ASP.NET Core's `WebApplicationFactory` lets you call
-    endpoints directly from a test without standing up a real server.
+    exercising the full request/response cycle without standing up a
+    real server.
     """
 
     app = create_app()

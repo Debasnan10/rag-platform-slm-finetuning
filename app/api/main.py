@@ -1,11 +1,10 @@
 """FastAPI application entrypoint.
 
-`create_app()` is an application *factory* - a function that builds and
+`create_app()` is an application factory - a function that builds and
 returns a configured `FastAPI` instance, rather than a bare module-level
-`app = FastAPI()`. This mirrors `WebApplication.CreateBuilder(...)` in an
-ASP.NET Core `Program.cs`: it gives tests a clean way to spin up a fresh
-app instance (e.g. with different settings) instead of importing one
-shared global.
+`app = FastAPI()`. This gives tests a clean way to spin up a fresh app
+instance (e.g. with different settings) instead of importing one shared
+global.
 
 Run locally with:
     uvicorn app.api.main:app --reload
@@ -29,8 +28,8 @@ logger = get_logger(__name__)
 
 @asynccontextmanager
 async def _lifespan(app: FastAPI) -> AsyncIterator[None]:
-    """Startup/shutdown hook - the ASP.NET Core equivalent of code you'd
-    put around `app.Run()` in `Program.cs` (or `IHostedService.StartAsync`).
+    """Startup/shutdown hook: runs once before the app starts serving
+    requests, and once as it shuts down.
     """
 
     settings = get_settings()
@@ -58,9 +57,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     async def _handle_app_error(_: Request, exc: AppError) -> JSONResponse:
         """Translate any `AppError` subclass into a consistent JSON error body.
 
-        Equivalent to a global `IExceptionHandler` / exception-handling
-        middleware in ASP.NET Core: one place that maps domain exceptions
-        to HTTP responses, instead of try/except in every route.
+        One place that maps domain exceptions to HTTP responses, instead of
+        try/except in every route.
         """
 
         logger.warning("%s: %s", type(exc).__name__, exc.message)

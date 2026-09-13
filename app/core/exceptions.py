@@ -1,12 +1,11 @@
-"""Custom exception hierarchy for the RAG platform.
+"""Application exception hierarchy.
 
-Every exception the application deliberately raises inherits from
-`AppError`. This mirrors a typical C# pattern of a base custom
-`ApplicationException` with specific subclasses (e.g.
-`ValidationException : ApplicationException`) - it lets calling code
-either catch broad (`except AppError`) or narrow (`except VectorStoreError`),
-and lets a single FastAPI exception handler translate *any* `AppError`
-into a well-formed HTTP response without knowing about every subclass.
+Every error the application deliberately raises inherits from `AppError`.
+Callers can catch broadly (`except AppError`) or narrowly (`except
+VectorStoreError`) as needed, and a single FastAPI exception handler (see
+`app/api/main.py`) translates any `AppError` subclass into a well-formed
+HTTP response keyed off its `status_code`, without needing to know about
+every subclass individually.
 """
 
 from __future__ import annotations
@@ -37,19 +36,19 @@ class ConfigurationError(AppError):
 
 
 class IngestionError(AppError):
-    """Raised when a document fails to load, parse, or split (Phase 2)."""
+    """Raised when a document fails to load, parse, or split."""
 
     status_code = 422
 
 
 class VectorStoreError(AppError):
-    """Raised for FAISS index build/read/persist failures (Phase 3)."""
+    """Raised for FAISS index build, read, or persistence failures."""
 
     status_code = 500
 
 
 class RetrievalError(AppError):
-    """Raised when dense/sparse/hybrid retrieval fails (Phase 4)."""
+    """Raised when dense, sparse, or hybrid retrieval fails."""
 
     status_code = 500
 
@@ -61,13 +60,13 @@ class LLMError(AppError):
 
 
 class FineTuningError(AppError):
-    """Raised for LoRA/QLoRA training or adapter loading failures (Phase 6-7)."""
+    """Raised for LoRA/QLoRA training or adapter loading failures."""
 
     status_code = 500
 
 
 class EvaluationError(AppError):
-    """Raised when metric computation or evaluation runs fail (Phase 8)."""
+    """Raised when metric computation or an evaluation run fails."""
 
     status_code = 500
 
